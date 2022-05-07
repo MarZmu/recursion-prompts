@@ -7,11 +7,22 @@
 // Example: 5! = 5 x 4 x 3 x 2 x 1 = 120
 // factorial(5); // 120
 var factorial = function(n) {
+  if (n === 0) {
+    return 1;
+  } else if (n < 0) {
+    return null;
+  }
+  return n * factorial(n-1);
 };
 
 // 2. Compute the sum of an array of integers.
 // sum([1,2,3,4,5,6]); // 21
 var sum = function(array) {
+  if (!sum) {
+    var sum = array.slice(0,1);
+  }
+  sum += array.slice(0,1);
+  return sum(array);
 };
 
 // 3. Sum all numbers in an array containing nested arrays.
@@ -21,17 +32,55 @@ var arraySum = function(array) {
 
 // 4. Check if a number is even.
 var isEven = function(n) {
+  if (n === 0) {
+    return true;
+  } else if (n === 1 || n === -1) {
+    return false;
+  } else {
+    return (n > 0 ? isEven(n - 2) : isEven(n + 2));
+  }
 };
 
 // 5. Sum all integers below a given integer.
 // sumBelow(10); // 45
 // sumBelow(7); // 21
 var sumBelow = function(n) {
+  if (n === 0) {
+    return 0;
+  }
+  return (n < 0 ? (n + 1) + sumBelow(n + 1) : (n - 1) + sumBelow(n - 1));
 };
 
 // 6. Get the integers within a range (x, y).
 // range(2,9); // [3,4,5,6,7,8]
 var range = function(x, y) {
+  var xA = (Array.isArray(x) ? Math.abs(x[x.length - 1]) : Math.abs(x));
+  var yA = Math.abs(y);
+  //if not array,
+  if(!Array.isArray(x)) {
+    //check for range
+    if (Math.abs(x - y) === 1 || (Math.abs(x - y) === 0 /*&& Math.abs(x) - Math.abs(y) !== 0*/)) {
+      if (xA === yA && x !== y) {
+        x = (x > y ? [x - 1] : [x + 1]);
+      } else {
+        return [];
+      }
+    } else {
+      //make into an array
+      x = (x > y ? [x - 1] : [x + 1]);
+    }
+    //if is array
+  } else if (Array.isArray(x)) {
+    var last = x[x.length - 1];
+    //check if complete
+    if (Math.abs(last - y) === 1) {
+      return x;
+    } else {
+      //or push another number
+      x.push( x > y ? last - 1 : last + 1);
+    }
+  }
+  return range(x, y);
 };
 
 // 7. Compute the exponent of a number.
@@ -40,6 +89,21 @@ var range = function(x, y) {
 // exponent(4,3); // 64
 // https://www.khanacademy.org/computing/computer-science/algorithms/recursive-algorithms/a/computing-powers-of-a-number
 var exponent = function(base, exp) {
+
+  if (exp === 0) {
+    return 1;
+  }
+  if (exp === 1) {
+    return base;
+  }
+  if (exp -1 === 0) {
+    return base
+  }
+  if (exp + 2 === 0){
+    return base / base;
+  }
+  return (exp < 0 ? base /= exponent(base, exp + 1) : base *= exponent(base, exp - 1));
+
 };
 
 // 8. Determine if a number is a power of two.
