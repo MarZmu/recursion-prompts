@@ -18,16 +18,24 @@ var factorial = function(n) {
 // 2. Compute the sum of an array of integers.
 // sum([1,2,3,4,5,6]); // 21
 var sum = function(array) {
-  if (!sum) {
-    var sum = array.slice(0,1);
+  //Base case: end of array, just return number
+  if (array[0] === undefined) {
+    return 0;
   }
-  sum += array.slice(0,1);
-  return sum(array);
+  var copy = array.slice();
+  if(copy.length === 1/*!Array.isArray(array)*/) {
+    return copy[0];
+  } else {
+    var first = copy.slice(0,1)[0];
+    return first + sum(copy.slice(1));
+  }
+  //recursive case: add current number + result of sum
 };
 
 // 3. Sum all numbers in an array containing nested arrays.
 // arraySum([1,[2,3],[[4]],5]); // 15
 var arraySum = function(array) {
+
 };
 
 // 4. Check if a number is even.
@@ -248,7 +256,22 @@ var nestedEvenSum = function(obj) {
 
 // 30. Flatten an array containing nested arrays.
 // flatten([1,[2],[3,[[4]]],5]); // [1,2,3,4,5]
-var flatten = function(array) {
+var flatten = function(nestedArray) {
+  var result = [];
+  nestedArray.forEach(function(elem) {
+    if (!Array.isArray(elem)) {
+      result.push(elem);
+    } else {
+      if ((Array.isArray(flatten(elem)))) {
+        flatten(elem).forEach(function(elem) {
+          result.push(elem);
+        });
+      } else {
+        result.push(flatten(elem));
+      }
+    }
+  });
+  return result;
 };
 
 // 31. Given a string, return an object containing tallies of each letter.
