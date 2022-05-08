@@ -48,12 +48,6 @@ var arraySum = function(array) {
     });
     return sum;
   }
-  // recursive case: is an array
-  //     create sum var
-  //     //iterate, adding
-  //     //if array, add the result of arraySum
-  //     return sum;
-  // return result;
 };
 
 // 4. Check if a number is even.
@@ -80,33 +74,47 @@ var sumBelow = function(n) {
 // 6. Get the integers within a range (x, y).
 // range(2,9); // [3,4,5,6,7,8]
 var range = function(x, y) {
-  var xA = (Array.isArray(x) ? Math.abs(x[x.length - 1]) : Math.abs(x));
+  var xA = Math.abs(x);
   var yA = Math.abs(y);
-  //if not array,
-  if(!Array.isArray(x)) {
-    //check for range
-    if (Math.abs(x - y) === 1 || (Math.abs(x - y) === 0 /*&& Math.abs(x) - Math.abs(y) !== 0*/)) {
-      if (xA === yA && x !== y) {
-        x = (x > y ? [x - 1] : [x + 1]);
-      } else {
-        return [];
-      }
-    } else {
-      //make into an array
-      x = (x > y ? [x - 1] : [x + 1]);
-    }
-    //if is array
-  } else if (Array.isArray(x)) {
-    var last = x[x.length - 1];
-    //check if complete
-    if (Math.abs(last - y) === 1) {
-      return x;
-    } else {
-      //or push another number
-      x.push( x > y ? last - 1 : last + 1);
-    }
-  }
-  return range(x, y);
+  var xyA = Math.abs(x - y); // 13    1    0      1     5
+  var yxA = Math.abs (y - x);//  13   1    0      9
+  // //base cases: x and y are identical numbers /consectutive numbers
+  //             //or last number in array is consec to y
+  //             //EXAMPLES: should pass (4, 5)  (-3, -2)
+  // if (x === y || x + 1 === y || x - 1 === y) {
+  //   return [];
+  // }
+  //recursive case: add next number to array plus range(x,y)
+
+
+
+  // var xA = (Array.isArray(x) ? Math.abs(x[x.length - 1]) : Math.abs(x));
+  // var yA = Math.abs(y);
+  // //if not array,
+  // if(!Array.isArray(x)) {
+  //   //check for range
+  //   if (Math.abs(x - y) === 1 || (Math.abs(x - y) === 0 /*&& Math.abs(x) - Math.abs(y) !== 0*/)) {
+  //     if (xA === yA && x !== y) {
+  //       x = (x > y ? [x - 1] : [x + 1]);
+  //     } else {
+  //       return [];
+  //     }
+  //   } else {
+  //     //make into an array
+  //     x = (x > y ? [x - 1] : [x + 1]);
+  //   }
+  //   //if is array
+  // } else if (Array.isArray(x)) {
+  //   var last = x[x.length - 1];
+  //   //check if complete
+  //   if (Math.abs(last - y) === 1) {
+  //     return x;
+  //   } else {
+  //     //or push another number
+  //     x.push( x > y ? last - 1 : last + 1);
+  //   }
+  // }
+  // return range(x, y);
 };
 
 // 7. Compute the exponent of a number.
@@ -133,14 +141,23 @@ var exponent = function(base, exp) {
 };
 
 // 8. Determine if a number is a power of two.
-// powerOfTwo(1); // true
-// powerOfTwo(16); // true
-// powerOfTwo(10); // false
 var powerOfTwo = function(n) {
+  if (n === 1) {
+   return true;
+  } else if (n % 2 !== 0 || n === 0){
+   return false;
+  } else {
+   return powerOfTwo(n / 2);
+  }
 };
 
 // 9. Write a function that reverses a string.
 var reverse = function(string) {
+  if (string.length === 1) {
+    return string[0];
+  }
+  var letter = string[string.length - 1];
+  return letter + reverse(string.slice(0, -1));
 };
 
 // 10. Write a function that determines if a string is a palindrome.
