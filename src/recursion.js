@@ -106,22 +106,14 @@ var range = function(x, y) {
 // 8^2 = 8 x 8 = 64. Here, 8 is the base and 2 is the exponent.
 // exponent(4,3); // 64
 // https://www.khanacademy.org/computing/computer-science/algorithms/recursive-algorithms/a/computing-powers-of-a-number
-var exponent = function(base, exp) {
-
+  var exponent = function(base, exp) {
   if (exp === 0) {
     return 1;
   }
   if (exp === 1) {
     return base;
   }
-  if (exp -1 === 0) {
-    return base
-  }
-  if (exp + 2 === 0){
-    return base / base;
-  }
-  return (exp < 0 ? base /= exponent(base, exp + 1) : base *= exponent(base, exp - 1));
-
+  return (exp < 0 ? base = Number((1/base * exponent(base, exp + 1)).toFixed(6)) : base *= exponent(base, exp - 1));
 };
 
 // 8. Determine if a number is a power of two.
@@ -187,12 +179,25 @@ var modulo = function(x, y) {
 
 // 12. Write a function that multiplies two numbers without using the * operator or
 // Math methods.
-var multiply = function(x, y) {
-};
-
+  var multiply = function(x, y) {
+    if (y - 1 === 0) {
+      return x;
+    } else if (y + 1 === 0) {
+      return -(x);
+    }
+    if (x > 0 && y < 0 || x < 0 && y > 0) {
+      return (y < 0 ? x - multipy(x, y + 1) : x - multiply(x, y - 1));
+    } else {
+       if (x < 0) {
+         return (y < 0 ? -x + multiply(x, y + 1) : x + multiply(x, y - 1));
+       }
+      return (y < 0 ? x + multiply(x, y + 1) : x + multiply(x, y - 1));
+    }
+  };
 // 13. Write a function that divides two numbers without using the / operator or
 // Math methods to arrive at an approximate quotient (ignore decimal endings).
 var divide = function(x, y) {
+
 };
 
 // 14. Find the greatest common divisor (gcd) of two positive numbers. The GCD of two
