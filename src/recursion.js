@@ -4,7 +4,7 @@
 
 // 1. Calculate the factorial of a number. The factorial of a non-negative integer n,
 // denoted by n!, is the product of all positive integers less than or equal to n.
-// Example: 5! = 5 x 4 x 3 x 2 x 1 = 120
+// Elastmple: 5! = 5 x 4 x 3 x 2 x 1 = 120
 // factorial(5); // 120
 var factorial = function(n) {
   if (n === 0) {
@@ -71,51 +71,35 @@ var sumBelow = function(n) {
   return (n < 0 ? (n + 1) + sumBelow(n + 1) : (n - 1) + sumBelow(n - 1));
 };
 
-// 6. Get the integers within a range (x, y).
-// range(2,9); // [3,4,5,6,7,8]
+// // 6. Get the integers within a range (x, y).
+// // range(2,9); // [3,4,5,6,7,8]
 var range = function(x, y) {
-  var xA = Math.abs(x);
+  var last = (Array.isArray(x) ? x[x.length - 1] : x);
   var yA = Math.abs(y);
-  var xyA = Math.abs(x - y); // 13    1    0      1     5
-  var yxA = Math.abs (y - x);//  13   1    0      9
-  // //base cases: x and y are identical numbers /consectutive numbers
-  //             //or last number in array is consec to y
-  //             //EXAMPLES: should pass (4, 5)  (-3, -2)
-  // if (x === y || x + 1 === y || x - 1 === y) {
-  //   return [];
-  // }
-  //recursive case: add next number to array plus range(x,y)
-
-
-
-  // var xA = (Array.isArray(x) ? Math.abs(x[x.length - 1]) : Math.abs(x));
-  // var yA = Math.abs(y);
-  // //if not array,
-  // if(!Array.isArray(x)) {
-  //   //check for range
-  //   if (Math.abs(x - y) === 1 || (Math.abs(x - y) === 0 /*&& Math.abs(x) - Math.abs(y) !== 0*/)) {
-  //     if (xA === yA && x !== y) {
-  //       x = (x > y ? [x - 1] : [x + 1]);
-  //     } else {
-  //       return [];
-  //     }
-  //   } else {
-  //     //make into an array
-  //     x = (x > y ? [x - 1] : [x + 1]);
-  //   }
-  //   //if is array
-  // } else if (Array.isArray(x)) {
-  //   var last = x[x.length - 1];
-  //   //check if complete
-  //   if (Math.abs(last - y) === 1) {
-  //     return x;
-  //   } else {
-  //     //or push another number
-  //     x.push( x > y ? last - 1 : last + 1);
-  //   }
-  // }
-  // return range(x, y);
-};
+  if(!Array.isArray(x)) {
+    //check for range
+    if (Math.abs(x - y) === 1 || (Math.abs(x - y) === 0)) {
+      if (last === yA && x !== y) {
+        x = (x > y ? [x - 1] : [x + 1]);
+      } else {
+        return [];
+      }
+    } else {
+      //make into an array
+      x = (x > y ? [x - 1] : [x + 1]);
+    }
+    //if is array
+  } else if (Array.isArray(x)) {
+    //check if complete
+    if ((last > y && last - 1 === y) || last < y && last + 1 === y) {
+      return x;
+    } else {
+      //or push another number
+      x.push( last > y ? last - 1 : last + 1);
+    }
+  }
+  return range(x, y);
+}
 
 // 7. Compute the exponent of a number.
 // The exponent of a number says how many times the base number is used as a factor.
@@ -162,14 +146,43 @@ var reverse = function(string) {
 
 // 10. Write a function that determines if a string is a palindrome.
 var palindrome = function(string) {
-};
+  string = string.split(' ').join('').toUpperCase();
+  if (string.length < 3 && string[0] === string.slice(-1)) {
+    return true;
+  } else {
+    return (string[0] === string.slice(-1) ? palindrome(string.slice(1, -1)) : false);
+  }
+}
 
-// 11. Write a function that returns the remainder of x divided by y without using the
-// modulo (%) operator.
-// modulo(5,2) // 1
-// modulo(17,5) // 2
-// modulo(22,6) // 4
+// 11. Write a function that returns the remainder of x divided by y without using %
+
+//the includes function doesnt allow for comments! but basically it recursively
+//adds or subtracts y from x until it would be greater/less than x, then returns 0 or x
 var modulo = function(x, y) {
+  var isNeg = ((x < 0 && y > 0) || (x > 0 && y < 0))
+  var bothNeg = (x < 0 && y < 0);
+  if (isNaN(x) || isNaN(y) || y === 0) {
+    return NaN;
+  } else if (x === 0){
+    return 0;
+  }
+  if (isNeg) {
+    var yX = (x < 0 && y > 0);
+    if (yX) {
+      if (x + y >= 0) {
+        return (x + y === 0 ? 0 : x);
+      } else {
+        return (modulo(x + y, y));
+      }
+    }
+  } else {
+    var lastCall = (bothNeg ? x - y >= 0 : x - y < 0);
+    if (lastCall) {
+      return (x - y === 0 ? 0 : x);
+    } else {
+      return modulo(x - y, y);
+    }
+  }
 };
 
 // 12. Write a function that multiplies two numbers without using the * operator or
@@ -236,6 +249,22 @@ var rMap = function(array, callback) {
 // countKeysInObj(obj, 'r') // 1
 // countKeysInObj(obj, 'e') // 2
 var countKeysInObj = function(obj, key) {
+  var count = 0;
+  //iterate through the kay value pairs
+  for (var [k, val] of Object.entries(obj)){
+    //if the value is an obj, add recurse return to count
+    if (typeof(val) === 'object') {
+      if (k === key) {
+        count++;
+      }
+      count += countKeysInObj(val, key);
+    } else {
+      //if val matches, increase count, otherwise count is 0
+      count += (k === key ? 1 : 0);
+    }
+  }
+  //return total count
+  return count;
 };
 
 // 23. Write a function that counts the number of times a value occurs in an object.
@@ -243,16 +272,48 @@ var countKeysInObj = function(obj, key) {
 // countValuesInObj(obj, 'r') // 2
 // countValuesInObj(obj, 'e') // 1
 var countValuesInObj = function(obj, value) {
+//start a count
+  var count = 0;
+  //iterate through the kay value pairs
+  for (var [key, val] of Object.entries(obj)){
+    //if the value is an obj, add recurse return to count
+    if (typeof(val) === 'object') {
+      count += countValuesInObj(val, value);
+    } else {
+      //if val matches, increase count, otherwise count is 0
+      count += (val === value? 1 : 0);
+    }
+  }
+  //return total count
+  return count;
 };
 
 // 24. Find all keys in an object (and nested objects) by a provided name and rename
 // them to a provided new name while preserving the value stored at that key.
 var replaceKeysInObj = function(obj, oldKey, newKey) {
+  //iterate object
+  for (var key in obj) {
+    if (typeof(obj[key]) === 'object' && !(Array.isArray(obj[key]))) {
+      //recursive: call function on nested objects { }
+      if (key === oldKey) {
+        obj[newKey] = obj[oldKey];
+        delete obj[oldKey];
+      }
+      replaceKeysInObj(obj[key], oldKey, newKey);
+    } else {
+      //basecase: unnested => create new key with value, remove old key
+      if (key === oldKey) {
+        obj[newKey] = obj[oldKey];
+        delete obj[oldKey];
+      }
+    }
+  }
+  return obj;
 };
 
 // 25. Get the first n Fibonacci numbers. In the Fibonacci sequence, each subsequent
 // number is the sum of the previous two.
-// Example: 0, 1, 1, 2, 3, 5, 8, 13, 21, 34.....
+// Elastmple: 0, 1, 1, 2, 3, 5, 8, 13, 21, 34.....
 // fibonacci(5); // [0,1,1,2,3,5]
 // Note: The 0 is not counted.
 var fibonacci = function(n) {
